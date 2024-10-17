@@ -28,97 +28,94 @@
       register: site_data
       run_once: true
       loop: "{{ netbox_sites.json.results }}"
+
+    - name: Collect List of devices from Netbox
+      uri:
+        url: "https://{{ netbox_host }}/api/dcim/devices"
+        validate_certs: false
+        headers:
+          authorization: "Token {{ netbox_token }}"
+      register: netbox_devices
+      delegate_to: localhost
+      run_once: true
     
-#    - name: Collect List of devices from Netbox
-#      uri:
-#        url: "https://{{ netbox_host }}/api/dcim/devices"
-#        validate_certs: false
-#        headers:
-#          authorization: "Token {{ netbox_token }}"
-#      register: netbox_devices
-#      delegate_to: localhost
-#      run_once: true
-#    
-#    - name: Gather Device Roles from Netbox
-#      uri:
-#        url: "https://{{ netbox_host }}/api/dcim/device-roles"
-#        validate_certs: false
-#        headers:
-#          authorization: Token {{ netbox_token }}
-#      register: netbox_roles
-#      delegate_to: localhost
-#      run_once: true
+    - name: Gather Device Roles from Netbox
+      uri:
+        url: "https://{{ netbox_host }}/api/dcim/device-roles"
+        validate_certs: false
+        headers:
+          authorization: Token {{ netbox_token }}
+      register: netbox_roles
+      delegate_to: localhost
+      run_once: true
+    - name: Gather Tenants from Netbox
+      uri:
+        url: "https://{{ netbox_host }}/api/tenancy/tenants"
+        validate_certs: false
+        headers:
+          authorization: Token {{ netbox_token }}
+      register: netbox_tenants
+      delegate_to: localhost
+      run_once: true
 
-#    - name: Gather Tenants from Netbox
-#      uri:
-#        url: "https://{{ netbox_host }}/api/tenancy/tenants"
-#        validate_certs: false
-#        headers:
-#          authorization: Token {{ netbox_token }}
-#      register: netbox_tenants
-#      delegate_to: localhost
-#      run_once: true
-#
-#    - name: Gather Tags from Netbox
-#      uri:
-#        url: "https://{{ netbox_host }}/api/extras/tags"
-#        validate_certs: false
-#        headers:
-#          authorization: Token {{ netbox_token }}
-#      register: netbox_tags
-#      delegate_to: localhost
-#      run_once: true
+    - name: Gather Tags from Netbox
+      uri:
+        url: "https://{{ netbox_host }}/api/extras/tags"
+        validate_certs: false
+        headers:
+          authorization: Token {{ netbox_token }}
+      register: netbox_tags
+      delegate_to: localhost
+      run_once: true
+    - name: Create Device Role Labels
+      kentik.kentik_config.kentik_label:
+        name: "{{ item['name'] }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+        color: "#{{ item['color'] }}"
+      delegate_to: localhost
+      loop: "{{ netbox_roles.json.results }}"
+      run_once: true
+    - name: Create Tenant Labels
+      kentik.kentik_config.kentik_label:
+        name: "{{ item['name'] }}"
+        color: "#0000FF" # Netbox doesn't define 'color' for tenants, so choose a default value here
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+      delegate_to: localhost
+      loop: "{{ netbox_tenants.json.results }}"
+      run_once: true
 
-#    - name: Create Device Role Labels
-#      kentik.kentik_config.kentik_label:
-#        name: "{{ item['name'] }}"
-#        email: "{{ kentik_user }}"
-#        token: "{{ kentik_token }}"
-#        color: "#{{ item['color'] }}"
-#      delegate_to: localhost
-#      loop: "{{ netbox_roles.json.results }}"
-#      run_once: true
-
-#    - name: Create Tenant Labels
-#      kentik.kentik_config.kentik_label:
-#        name: "{{ item['name'] }}"
-#        color: "#0000FF" # Netbox doesn't define 'color' for tenants, so choose a default value here
-#        email: "{{ kentik_user }}"
-#        token: "{{ kentik_token }}"
-#      delegate_to: localhost
-#      loop: "{{ netbox_tenants.json.results }}"
-#      run_once: true
-#
-#    - name: Create Tags Labels
-#      kentik.kentik_config.kentik_label:
-#        name: "{{ item['name'] }}"
-#        color: "#{{ item['color'] }}"
-#        email: "{{ kentik_user }}"
-#        token: "{{ kentik_token }}"
-#      delegate_to: localhost
-#      loop: "{{ netbox_tags.json.results }}"
-#      run_once: true
-    
-#    - name: Create Device
-#      loop: "{{ netbox_devices.json.results }}"
-#      loop_control:
-#        loop_var: results
-#      kentik.kentik_config.kentik_device:
-#        deviceName: "{{ results.name }}"
-#        deviceSampleRate: 10
-#        planName: Free Flowpak Plan
-#        siteName: test
-#        sendingIps: [ "{{ results.primary_ip['address'] | regex_replace('/32','') }}"  ]
-#        deviceSnmpIp: "{{ results.primary_ip['address'] | regex_replace('/32','') }}"
-#        deviceSnmpCommunity: kentik
-#        nms:
-#          agentId: "27"
-#          ipAddress: "{{ results.primary_ip['address'] | regex_replace('/32','')}}"
-#          snmp:
-#            credentialName: default
-#        email: "{{ kentik_user }}"
-#        token: "{{ kentik_token }}"
-#        labels: ["{{ netbox_roles | join(',') }}", "{{ netbox_tags | join(',') }}", "{{ netbox_tenants | join(',') }}"]
+    - name: Create Tags Labels
+      kentik.kentik_config.kentik_label:
+        name: "{{ item['name'] }}"
+        color: "#{{ item['color'] }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+      delegate_to: localhost
+      loop: "{{ netbox_tags.json.results }}"
+      run_once: true
+   
+    - name: Create Device
+      loop: "{{ netbox_devices.json.results }}"
+      loop_control:
+        loop_var: results
+      kentik.kentik_config.kentik_device:
+        deviceName: "{{ results.name }}"
+        deviceSampleRate: 10
+        planName: Free Flowpak Plan
+        siteName: test
+        sendingIps: [ "{{ results.primary_ip['address'] | regex_replace('/32','') }}"  ]
+        deviceSnmpIp: "{{ results.primary_ip['address'] | regex_replace('/32','') }}"
+        deviceSnmpCommunity: kentik
+        nms:
+          agentId: "27"
+          ipAddress: "{{ results.primary_ip['address'] | regex_replace('/32','')}}"
+          snmp:
+            credentialName: default
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+        labels: ["{{ netbox_roles | join(',') }}", "{{ netbox_tags | join(',') }}", "{{ netbox_tenants | join(',') }}"]
 #        labels: ["{{ results.tags }}" ]
       delegate_to: localhost
 
