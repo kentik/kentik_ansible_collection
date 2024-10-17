@@ -1,0 +1,9 @@
+# ansible inventory file remove all uncommented lines or comment all uncommented lines. 
+# example without ansible_host variable, use if device name is resolvable by dns
+#device_name
+# example with ansible host variable, use if device_name is not resolvable by dns
+#device_name ansible_host=10.10.10.10
+# example with groups
+[ios]
+ios_device
+
