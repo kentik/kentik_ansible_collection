@@ -17,7 +17,7 @@ echo "############################################"
 read -p "Would you like to continue? (y or n) - " user_confirm
 
 if [ "$user_confirm" = "n" ]; then 
-    echo "NO SELECTED, EXITING THE PROGRAM"
+    echo "No seclected, exiting program..."
     exit 0
 fi
 
@@ -102,11 +102,14 @@ export NETBOX_TOKEN=$netbox_token
 ######
 # Step 4: BEGIN RUNNING PLAYBOOKS
 #####
-
+echo "############################################"
 echo "YOU ARE NOW READY TO RUN THE SYNC PLAYBOOK FOR NETBOX"
+echo "############################################"
 echo "GO TO THE PLAYBOOKS DIRECTORY AND EDIT PLAYBOOKS TO SUIT YOUR NEEDS"
+echo "############################################"
 echo "IMPORTANT REMINDER"
-echo "RUN ALL ANSIBLE COMMANDS USING THE PYTHON VIRTUAL ENVIRONMENT LIBRARY"
+echo "RUN ALL ANSIBLE COMMANDS USING THE PYTHON VIRTUAL ENVIRONMENT LIBRARY EXAMPLE BELOW"
+echo "############################################"
 echo "../ansible-venv/bin/ansible-playbook <playbook name> -i <netbox inventory>"
 
 exit 0
