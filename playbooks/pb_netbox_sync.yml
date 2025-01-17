@@ -112,7 +112,7 @@
             agentId: "27"
             ipAddress: "{{ primary_ip4 }}"
             snmp:
-                credentialName: default
+                credentialName: "{{ kentik_nms_credential }}"
         labels: "{{ tags }}"
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"

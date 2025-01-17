@@ -105,15 +105,6 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -139,7 +130,7 @@ dmypy.json
 .env
 .venv
 env/
-venv/
+*venv/
 ENV/
 env.bak/
 venv.bak/
@@ -156,3 +147,6 @@ private_*
 
 # Vscode
 settings.json
+
+# Tmp Files
+*tmp/
