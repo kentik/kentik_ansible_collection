@@ -154,7 +154,7 @@ ansible-playbook pb_netbox_sync.yml -i netbox_inventory.yml
 
 ```yaml
 plugin: netbox.netbox.nb_inventory
-api_endpoint: https://xglw4450.cloud.netboxapp.com/
+api_endpoint: https://mycloudinstance.cloud.netboxapp.com/
 validate_certs: False
 config_context: False
 device_query_filters:
