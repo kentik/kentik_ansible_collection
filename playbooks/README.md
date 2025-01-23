@@ -54,5 +54,3 @@ Be sure to create the credential file with other local creds.
 
   
 -- happy automating
-<br/>
-\
