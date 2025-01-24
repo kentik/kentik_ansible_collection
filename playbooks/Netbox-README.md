@@ -146,6 +146,59 @@ Finally, when we execute the playbook, rather than specifying specific devices t
 ```
 ansible-playbook pb_netbox_sync.yml -i netbox_inventory.yml
 ```
+### Adding Flow only Devices
+
+By default, The playbook comes configured to add devices for both Kentik Flow collection and for Kentik NMS. If you have devices that should be only added for flow collection, simply comment out the NMS subsection:
+
+```yaml
+    - name: Create Device
+      kentik.kentik_config.kentik_device:
+        deviceName: "{{ inventory_hostname }}"
+        deviceSampleRate: 10
+        planName: Free Flowpak Plan
+        siteName: "{{ sites[0] }}"
+        sendingIps: ["{{ primary_ip4 }}"]
+        deviceSnmpIp: "{{ primary_ip4 }}"
+        deviceSnmpCommunity: kentik
+        minimizeSnmp: false
+        #nms:
+        #    agentId: "27"
+        #    ipAddress: "{{ primary_ip4 }}"
+        #    snmp:
+        #        credentialName: default
+        labels: "{{ tags }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+      delegate_to: localhost
+```
+<br/>
+
+### Adding NMS only devices
+
+If you wish to add devices to the Kentik NMS platform and not for flow collection, you can signal this by removing the flow related fields as shown below and by changing the plan name to the relevant Kentik NMS plan. 
+
+```yaml
+    - name: Create Device
+      kentik.kentik_config.kentik_device:
+        deviceName: "{{ inventory_hostname }}"
+        #deviceSampleRate: 10
+        planName: my-metrics-plan
+        siteName: "{{ sites[0] }}"
+        #sendingIps: ["{{ primary_ip4 }}"]
+        #deviceSnmpIp: "{{ primary_ip4 }}"
+        #deviceSnmpCommunity: kentik
+        #minimizeSnmp: false
+        nms:
+            agentId: "27"
+            ipAddress: "{{ primary_ip4 }}"
+            snmp:
+                credentialName: default
+        labels: "{{ tags }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+      delegate_to: localhost
+```
+
 
 
 ## Building the dynamic Netbox inventory
