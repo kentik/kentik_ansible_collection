@@ -31,12 +31,12 @@ pip3 install -r requirements.txt
 This integration can work on any ansible platform that meets the version requirements, but we have explicity tested using the following distributions:
 
 #### RHEL based
-Rocky Linux 8 - May require using python virtual environment to meet versionm requirements
-Rocky Linux 9 
+**Rocky Linux** 8 - *May require using python virtual environment to meet versionm requirements*<br/>
+**Rocky Linux 9** 
 
 #### Debian Based
-Debian 11, 12
-Ubuntu 22.04, 24.04
+**Debian 11, 12**<br/>
+**Ubuntu 22.04, 24.04**
 
 If your distribution is not listed you can still install the integration using a Python virtual environment. 
 
