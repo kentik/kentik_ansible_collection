@@ -1,7 +1,7 @@
 {
     "ANSIBLE_MODULE_ARGS": {
-        "netboxUrl": "https://yznw9097.cloud.netboxapp.com",
-        "netboxToken": "6Bxcxk({ic7fYf]Mzq3b#hamDTj)jVasYKAic6q8",
+        "netboxUrl": "https://netboxlabs.com",
+        "netboxToken": "blahblahablah",
         "enableTenant": false,
         "tenantName": "tenants",
         "enableSitebyIP": false,
@@ -11,7 +11,7 @@
         "enableCustomFields": false,
         "customFieldName": "POD",
         "activeOnly": true,
-        "email": "ethan.angele@hotmail.com",
-        "token": "611a4282413ed6c9a355469c0d4ccb66"
+        "email": "networkenginer@networking.com",
+        "token": "blahblahblah"
     }
 }
