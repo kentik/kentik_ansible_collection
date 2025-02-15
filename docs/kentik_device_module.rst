@@ -1,13 +1,13 @@
-
 .. Document meta
 
 :orphan:
+:github_url: https://github.com/kentik/kentik_ansible_collection/edit/main/plugins/modules/kentik_device.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!---%20Your%20description%20here%20--%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr
 
 .. |antsibull-internal-nbsp| unicode:: 0xA0
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.11.0
+  :antsibull-docs: 2.16.3
 
 .. Anchors
 
@@ -23,7 +23,7 @@ kentik.kentik_config.kentik_device module -- This is a module that will perform 
 .. Collection note
 
 .. note::
-    This module is part of the `kentik.kentik_config collection <https://galaxy.ansible.com/ui/repo/published/kentik/kentik_config/>`_ (version 1.0.0).
+    This module is part of the `kentik.kentik_config collection <https://galaxy.ansible.com/ui/repo/published/kentik/kentik_config/>`_ (version 1.2.0).
 
     It is not included in ``ansible-core``.
     To check whether it is installed, run :code:`ansible-galaxy collection list`.
@@ -846,7 +846,7 @@ Parameters
 
       .. ansible-option-type-line::
 
-        :ansible-option-type:`list` / :ansible-option-elements:`elements=string` / :ansible-option-required:`required`
+        :ansible-option-type:`list` / :ansible-option-elements:`elements=string`
 
       .. raw:: html
 
@@ -976,6 +976,48 @@ Parameters
   * - .. raw:: html
 
         <div class="ansible-option-cell">
+        <div class="ansibleOptionAnchor" id="parameter-updateSnmpAuth"></div>
+
+      .. _ansible_collections.kentik.kentik_config.kentik_device_module__parameter-updatesnmpauth:
+
+      .. rst-class:: ansible-option-title
+
+      **updateSnmpAuth**
+
+      .. raw:: html
+
+        <a class="ansibleOptionLink" href="#parameter-updateSnmpAuth" title="Permalink to this option"></a>
+
+      .. ansible-option-type-line::
+
+        :ansible-option-type:`boolean`
+
+      .. raw:: html
+
+        </div>
+
+    - .. raw:: html
+
+        <div class="ansible-option-cell">
+
+      Update the SNMP Authentication.
+
+
+      .. rst-class:: ansible-option-line
+
+      :ansible-option-choices:`Choices:`
+
+      - :ansible-option-choices-entry-default:`false` :ansible-option-choices-default-mark:`← (default)`
+      - :ansible-option-choices-entry:`true`
+
+
+      .. raw:: html
+
+        </div>
+
+  * - .. raw:: html
+
+        <div class="ansible-option-cell">
         <div class="ansibleOptionAnchor" id="parameter-useBgpDeviceId"></div>
 
       .. _ansible_collections.kentik.kentik_config.kentik_device_module__parameter-usebgpdeviceid:
@@ -1024,7 +1066,6 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    
     # Pass in a message
     - name: Create a device
       kentik_device:
@@ -1048,7 +1089,6 @@ Examples
     - name: Test failure of the module
       kentik_device:
         name: just_the_name_nothing_else_fail
-
 
 
 
@@ -1188,7 +1228,9 @@ Collection links
   - title: "Repository (Sources)"
     url: "https://github.com/kentik/kentik_ansible_collection"
     external: true
+  - title: "Report an issue"
+    url: "https://github.com/kentik/kentik_ansible_collection/issues/new/choose"
+    external: true
 
 
 .. Parsing errors
-

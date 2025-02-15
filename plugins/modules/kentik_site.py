@@ -180,6 +180,7 @@ def gather_sites(base_url, api_version, auth, module):
 def compare_site(site_list, module):
     """Check to see if the site exists"""
     site = module.params["title"]
+    function_return = {}
     if site in site_list:
         logging.info("Site Exists")
         function_return = site_list[site]
@@ -189,12 +190,13 @@ def compare_site(site_list, module):
     return function_return
 
 
-def delete_site(base_url, api_version, auth, site_id, module):
+def delete_site(base_url, api_version, auth, site_id, module) -> dict:
     """Function to delete a site"""
     logging.info("Deleting Site...")
     url = f"{base_url}{api_version}/sites/{site_id}"
     payload = {}
     headers = auth
+    function_return = ''
     try:
         response = requests.request(
             "DELETE", url, headers=headers, data=payload, timeout=30
@@ -215,6 +217,7 @@ def create_site(base_url, api_version, auth, site_object, module):
 
     payload = json.dumps({"site": site_object})
     headers = auth
+    function_return = {}
     try:
         response = requests.request(
             "POST", url, headers=headers, data=payload, timeout=30
@@ -275,6 +278,7 @@ def update_site(base_url, api_version, auth, module, site_id, site_object):
     site_object['id'] = site_id
     payload = json.dumps({"site": site_object})
     headers = auth
+    site_data = {}
     try:
         response = requests.request(
             "PUT", url, headers=headers, data=payload, timeout=30
