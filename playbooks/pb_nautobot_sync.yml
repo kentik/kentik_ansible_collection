@@ -4,8 +4,7 @@
   gather_facts: false
   vars_files:
     - ./vars/credentials.yml
-  vars: 
-    tags: []
+
 
   tasks:
 
@@ -20,11 +19,13 @@
       run_once: true
 
     - name: Create the Site
-      kentik_site:
+      kentik.kentik_config.kentik_site:
         title: "{{ item['name'] }}"
         lat: "{{ item['latitude'] | int }}"
         lon: "{{ item['longitude'] | int }}"
         state: present
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
       delegate_to: localhost
       register: site_data
       run_once: true
@@ -61,22 +62,31 @@
       run_once: true
     
     - name: Create Device Role Labels
-      kentik_label:
+      kentik.kentik_config.kentik_label:
         name: "{{ item['name'] }}"
+        color: "#{{ item['color'] }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
       delegate_to: localhost
       loop: "{{ nautobot_roles.json.results }}"
       run_once: true
 
     - name: Create Tenant Labels
-      kentik_label:
+      kentik.kentik_config.kentik_label:
         name: "{{ item['name'] }}"
+        color: "#00ff00"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
       delegate_to: localhost
       loop: "{{ nautobot_tenants.json.results }}"
       run_once: true
 
     - name: Create Tags Labels
-      kentik_label:
+      kentik.kentik_config.kentik_label:
         name: "{{ item['name'] }}"
+        color: "#{{ item['color'] }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
       delegate_to: localhost
       loop: "{{ nautobot_tags.json.results }}"
       run_once: true
@@ -85,8 +95,12 @@
       set_fact:
         tags: "{{ device_roles + tenants + tags }}"
 
+    - name: Print Tags
+      debug:
+        var: tags
+
     - name: Create Device
-      kentik_device:
+      kentik.kentik_config.kentik_device:
         deviceName: "{{ inventory_hostname }}"
         deviceSampleRate: 10
         planName: Free Flowpak Plan
@@ -99,5 +113,7 @@
             ipAddress: "{{ primary_ip4 }}"
             snmp:
                 credentialName: snmp_v2_read_only
-        labels: tags
+        labels: "{{ tags }}"
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
       delegate_to: localhost
