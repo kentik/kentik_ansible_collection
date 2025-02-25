@@ -208,24 +208,34 @@ def delete_site(base_url, api_version, auth, site_id, module):
     return function_return
 
 
-def create_site(base_url, api_version, auth, site_object, module):
+def create_site(base_url, api_version, auth, site_object, module, retries = 0):
     """Function for creating the site"""
     logging.info("Creating Site...")
     url = f"{base_url}{api_version}/sites"
 
     payload = json.dumps({"site": site_object})
     headers = auth
-    try:
-        response = requests.request(
-            "POST", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            site_data = response.json()
-            function_return = site_data["site"]["id"]
-        else:
-            module.fail_json(msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    function_return = {}
+    if retries < 3:
+        try:
+            response = requests.request(
+                "POST", url, headers=headers, data=payload, timeout=30
+            )
+            if response.status_code == 200:
+                site_data = response.json()
+                function_return = site_data["site"]["id"]
+            elif response.status_code == 429:
+                time.sleep(response.headers['x-rate-limit-reset'])
+                retries += 1
+                create_site(base_url, api_version, auth, site_object, module, retries)
+            else:
+                module.fail_json(msg=response.text)
+            if int(response.headers['x-rate-limit-remaining']) < 10:
+                time.sleep(10) # Helps to slow down the rate of execution for throttling.
+        except ConnectionError as exc:
+            module.fail_json(msg=to_text(exc))
+    else:
+        module.fail_json(msg=response.text)
     return function_return
 
 
