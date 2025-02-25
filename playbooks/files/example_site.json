@@ -1,6 +1,6 @@
 {
     "ANSIBLE_MODULE_ARGS": {
-        "title": "SN1",
+        "title": "SN2",
         "lat": 47.6061,
         "lon": 122.3328,
         "postalAddress": {
@@ -12,8 +12,8 @@
         },
         "type": "SITE_TYPE_DATA_CENTER",
         "state": "present",
-        "email": "test@test.com",
-        "token": "testtoken",
+        "email": "ethan.angele@hotmail.com",
+        "token": "611a4282413ed6c9a355469c0d4ccb66",
         "infrastructureNetworks": [
             "192.0.2.0/28"
             ],
