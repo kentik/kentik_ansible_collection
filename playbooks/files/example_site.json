@@ -12,8 +12,8 @@
         },
         "type": "SITE_TYPE_DATA_CENTER",
         "state": "present",
-        "email": "ethan.angele@hotmail.com",
-        "token": "611a4282413ed6c9a355469c0d4ccb66",
+        "email": "blahblahblah@blahblahblah",
+        "token": "b30590823u5riewhfijksdbv",
         "infrastructureNetworks": [
             "192.0.2.0/28"
             ],

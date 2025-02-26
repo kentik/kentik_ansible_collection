@@ -150,3 +150,6 @@ settings.json
 
 # Tmp Files
 *tmp/
+
+# Local files
+*local_*

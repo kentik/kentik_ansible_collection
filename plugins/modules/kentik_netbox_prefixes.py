@@ -252,18 +252,28 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
     sites = response.json()
     site_dict = {}
     for site in sites["sites"]:
+        # if the list is empty, need to clear the blank element.
+        if site["addressClassification"]["otherNetworks"] == '':
+            site["addressClassification"]["otherNetworks"] = []
         site_dict[site["title"]] = site
     # Create a prefix list to be used later to remove sites from being updated.
     prefix_list = []
     for prefix in prefixes:
+        # Make sure the prefix has a site configured.
         if "site" in prefix:
+            # Make sure that the prefixes site is a site that already exists in kentik.
             if prefix["site"] in site_dict:
-                site_dict[prefix["site"]]["addressClassification"]["otherNetworks"].append(
-                    prefix["prefix"])
-                prefix_list.append(prefix["site"])
+                # Make sure that the prefix is not already configured in the site.
+                if prefix["prefix"] not in site_dict[prefix["site"]]["addressClassification"]["otherNetworks"]:
+                    site_dict[prefix["site"]]["addressClassification"]["otherNetworks"].append(
+                        prefix["prefix"])
+                    prefix_list.append(prefix["site"])
             else:
                 warnings.append(f"Site does not exist: {prefix["site"]}")
     # Remove sites from the update list that do not need to be updated.
+    if not prefix_list:
+        result = {"Sites": "No Change"}
+        return result
     for name, config in site_dict.items():
         if name not in prefix_list:
             logging.info("Site (%s) does not need updated", name)
@@ -271,7 +281,11 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
         try:
             logging.info("Updating site (%s)", name)
             response = requests.request(
-                "PUT", f"{url}/site/v202211/sites/{config["id"]}", headers=kentik_auth, data=json.dumps({"site": config}), timeout=30
+                "PUT", 
+                f"{url}/site/v202211/sites/{config["id"]}",
+                headers=kentik_auth,
+                data=json.dumps({"site": config}),
+                timeout=30
             )
             response.raise_for_status()
         except ConnectionError as exc:

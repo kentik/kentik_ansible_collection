@@ -232,7 +232,7 @@ def create_site(base_url, api_version, auth, site_object, module, retries = 0):
                 site_data = response.json()
                 function_return = site_data["site"]["id"]
             elif response.status_code == 429:
-                time.sleep(response.headers['x-rate-limit-reset'])
+                time.sleep(int(response.headers['x-rate-limit-reset']))
                 retries += 1
                 create_site(base_url, api_version, auth, site_object, module, retries)
             else:

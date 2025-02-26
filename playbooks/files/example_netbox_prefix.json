@@ -1,17 +1,17 @@
 {
     "ANSIBLE_MODULE_ARGS": {
-        "netboxUrl": "https://netboxlabs.com",
-        "netboxToken": "blahblahablah",
+        "netboxUrl": "https://netboxurl",
+        "netboxToken": "dfdsgreayertyherthbdfgz",
         "enableTenant": false,
         "tenantName": "tenants",
-        "enableSitebyIP": false,
+        "enableSitebyIP": true,
         "enableRoles": false,
-        "enableDescriptions": true,
+        "enableDescriptions": false,
         "enableVlan": false,
         "enableCustomFields": false,
         "customFieldName": "POD",
         "activeOnly": true,
-        "email": "networkenginer@networking.com",
-        "token": "blahblahblah"
+        "email": "email",
+        "token": "ewrt34trehgfn"
     }
 }
