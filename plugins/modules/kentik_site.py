@@ -162,20 +162,11 @@ def build_payload(module):
 def gather_sites(base_url, api_version, auth, module):
     """Gather a list of sites"""
     url = f"{base_url}{api_version}/sites"
-
     payload = {}
     headers = auth
     site_data = {}
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code >= 200 and response.status_code < 300:
-            site_data = response.json()
-        else:
-            module.fail_json(msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    site_data = response.json()
     site_dict = {}
     for site in site_data["sites"]:
         site_dict[site["title"]] = site["id"]
@@ -194,56 +185,48 @@ def compare_site(site_list, module):
         function_return = False
     return function_return
 
-
-def delete_site(base_url, api_version, auth, site_id, module) -> dict:
-    """Function to delete a site"""
-    logging.info("Deleting Site...")
-    url = f"{base_url}{api_version}/sites/{site_id}"
-    payload = {}
-    headers = auth
-    function_return = ''
-    try:
-        response = requests.request(
-            "DELETE", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            function_return = "ok"
-        else:
-            module.fail_json(msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
-    return function_return
-
-
-def create_site(base_url, api_version, auth, site_object, module, retries = 0):
-    """Function for creating the site"""
-    logging.info("Creating Site...")
-    url = f"{base_url}{api_version}/sites"
-
-    payload = json.dumps({"site": site_object})
-    headers = auth
-    function_return = {}
+def http_request_func(method, url, headers, payload, module, retries=0):
+    """Function for hanlding HTTP Requests"""
     if retries < 3:
         try:
             response = requests.request(
-                "POST", url, headers=headers, data=payload, timeout=30
+                method, url, headers=headers, data=payload, timeout=30
             )
             if response.status_code == 200:
-                site_data = response.json()
-                function_return = site_data["site"]["id"]
+                logging.info("%s HTTP Request Successfull for url: %s", method, url)
             elif response.status_code == 429:
-                time.sleep(int(response.headers['x-rate-limit-reset']))
+                time.sleep(int(response.headers['x-ratelimit-reset']))
                 retries += 1
-                create_site(base_url, api_version, auth, site_object, module, retries)
+                http_request_func(method, url, headers, payload, module, retries)
             else:
                 module.fail_json(msg=response.text)
-            if int(response.headers['x-rate-limit-remaining']) < 10:
+            if int(response.headers['x-ratelimit-remaining']) < 10:
                 time.sleep(10) # Helps to slow down the rate of execution for throttling.
         except ConnectionError as exc:
             module.fail_json(msg=to_text(exc))
     else:
         module.fail_json(msg=response.text)
-    return function_return
+    return response
+
+def delete_site(base_url, api_version, auth, site_id, module):
+    """Function to delete a site"""
+    logging.info("Deleting Site...")
+    url = f"{base_url}{api_version}/sites/{site_id}"
+    payload = {}
+    headers = auth
+    http_request_func("DELETE", url, headers, payload, module)
+    return "ok"
+
+
+def create_site(base_url, api_version, auth, site_object, module):
+    """Function for creating the site"""
+    logging.info("Creating Site...")
+    url = f"{base_url}{api_version}/sites"
+    payload = json.dumps({"site": site_object})
+    headers = auth
+    response = http_request_func("POST", url, headers, payload, module)
+    site_data = response.json()
+    return site_data["site"]["id"]
 
 
 def update_check(base_url, api_version, auth, site_id, site_object, module):
@@ -253,16 +236,8 @@ def update_check(base_url, api_version, auth, site_id, site_object, module):
     headers = auth
     site_data = {}
     payload = {}
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            site_data = response.json()
-        else:
-            module.fail_json(function="update_check", msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(function="update_check", msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    site_data = response.json()
     return_bool = False
     if site_object["lat"] == 0.0:
         site_object["lat"] = int(site_object["lat"])
@@ -293,21 +268,8 @@ def update_site(base_url, api_version, auth, module, site_id, site_object):
     payload = json.dumps({"site": site_object})
     headers = auth
     site_data = {}
-    try:
-        response = requests.request(
-            "PUT", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            site_data = response.json()
-        else:
-            module.fail_json(
-                function="update_site",
-                status_code=response.status_code,
-                msg=response.text,
-            )
-    except ConnectionError as exc:
-        module.fail_json(function="update_site", msg=to_text(exc))
-
+    response = http_request_func("PUT", url, headers, payload, module)
+    site_data = response.json()
     return site_data["site"]["id"]
 
 

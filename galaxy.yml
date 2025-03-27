@@ -20,3 +20,4 @@ issues: https://github.com/kentik/kentik_ansible_collection/issues
 build_ignore:
 - '*credentials*'
 - '*venv*'
+- '*local_*'

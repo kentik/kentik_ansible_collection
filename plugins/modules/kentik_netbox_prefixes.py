@@ -356,6 +356,36 @@ def create_custom_dimension(module, kentik_auth, name, direction):
     return response.status_code
 
 
+def http_request_func(method, url, headers, payload, module, retries=0):
+    """Function for hanlding HTTP Requests"""
+    if retries < 3:
+        try:
+            response = requests.request(
+                method, url, headers=headers, data=payload, timeout=30
+            )
+            if response.status_code == 200:
+                logging.info("%s HTTP Request Successfull for url: %s", method, url)
+            elif response.status_code == 429:
+                if 'x-ratelimit-reset' in response.headers:
+                    time.sleep(int(response.headers['x-ratelimit-reset']))
+                else:
+                    time.sleep(60)
+                retries += 1
+                http_request_func(method, url, headers, payload, module, retries)
+            elif response.status_code == 404:
+                return False
+            else:
+                module.fail_json(msg=response.text)
+            if 'x-ratelimit-remaining' in response.headers:
+                if int(response.headers['x-ratelimit-remaining']) < 10:
+                    time.sleep(10) # Helps to slow down the rate of execution for throttling.
+        except ConnectionError as exc:
+            module.fail_json(msg=to_text(exc))
+    else:
+        module.fail_json(msg="ERROR - RETRIED 3 TIMES")
+    return response
+
+
 def run_batch_url(module, kentik_auth, warnings, json_data_src, json_data_dst, name):
     '''Function to add populators in bulk to kentik, returns success or failure.'''
     # Start with source dimension.
@@ -365,8 +395,8 @@ def run_batch_url(module, kentik_auth, warnings, json_data_src, json_data_dst, n
         url = "https://api.kentik.com/api/v5/batch"
     if len(json_data_src["upserts"]) == 0:
         return "FAILED-EMPTY"
+    logging.info("Adding or updating the source custom dimensions for %s", name)
     try:
-        logging.info("Adding or updating the source custom dimensions for %s", name)
         response = requests.request("POST",
                                     f"{url}/customdimensions/c_src_{name}/populators",
                                     headers=kentik_auth,
