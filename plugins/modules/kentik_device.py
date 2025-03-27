@@ -168,6 +168,7 @@ try:
 except ImportError:
     HAS_ANOTHER_LIBRARY = False
 import logging
+import time
 
 
 def gather_labels(base_url, api_version, auth, module):
@@ -175,17 +176,8 @@ def gather_labels(base_url, api_version, auth, module):
     url = f"{base_url}/label/{api_version}/labels"
     payload = {}
     headers = auth
-    label_data = ''
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            label_data = response.json()
-        else:
-            module.fail_json(msg=f"gatherLabels: {response.text}")
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    label_data = response.json()
     label_dict = {}
     for label in label_data["labels"]:
         label_dict[label["name"]] = label["id"]
@@ -210,16 +202,10 @@ def build_labels(base_url, api_version, auth, module):
 def gather_sites(base_url, api_version, auth, module):
     """Gather a list of sites"""
     url = f"{base_url}{api_version}/sites"
-
     payload = {}
     headers = auth
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        site_data = response.json()
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    site_data = response.json()
     site_dict = {}
     for site in site_data["sites"]:
         site_dict[site["title"]] = site["id"]
@@ -272,6 +258,36 @@ def build_payload(base_url, auth, module):
     return payload
 
 
+def http_request_func(method, url, headers, payload, module, retries=0):
+    """Function for hanlding HTTP Requests"""
+    if retries < 3:
+        try:
+            response = requests.request(
+                method, url, headers=headers, data=payload, timeout=30
+            )
+            if response.status_code == 200:
+                logging.info("%s HTTP Request Successfull for url: %s", method, url)
+            elif response.status_code == 429:
+                if 'x-ratelimit-reset' in response.headers:
+                    time.sleep(int(response.headers['x-ratelimit-reset']))
+                else:
+                    time.sleep(60)
+                retries += 1
+                http_request_func(method, url, headers, payload, module, retries)
+            elif response.status_code == 404:
+                return False
+            else:
+                module.fail_json(msg=response.text)
+            if 'x-ratelimit-remaining' in response.headers:
+                if int(response.headers['x-ratelimit-remaining']) < 10:
+                    time.sleep(10) # Helps to slow down the rate of execution for throttling.
+        except ConnectionError as exc:
+            module.fail_json(msg=to_text(exc))
+    else:
+        module.fail_json(msg="ERROR - RETRIED 3 TIMES")
+    return response
+
+
 def gather_plans(auth, module):
     """Function to gather a list of existing plans"""
     if module.params["region"] == "EU":
@@ -281,16 +297,8 @@ def gather_plans(auth, module):
     payload = {}
     headers = auth
     plan_data = ''
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            plan_data = response.json()
-        else:
-            module.fail_json(function="gatherPlans", msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    plan_data = response.json()
     plan_dict = {}
     for plan in plan_data["plans"]:
         plan_dict[plan["name"]] = plan["id"]
@@ -313,18 +321,11 @@ def gather_devices(base_url, api_version, auth, module):
     url = f"{base_url}/device/{api_version}/device"
     payload = {}
     headers = auth
-
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        device_data = response.json()
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    device_data = response.json()
     device_dict = {}
     for device in device_data["devices"]:
         device_dict[device["deviceName"]] = device["id"]
-
     return device_dict
 
 
@@ -346,25 +347,18 @@ def compare_labels(base_url, api_version, auth, module, device_id, labels):
     payload = {}
     headers = auth
     function_return = ''
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            device_data = response.json()
-            device_labels = []
-            for device_label in device_data["device"]["labels"]:
-                device_labels.append(device_label["id"])
-            device_labels.sort()
-            labels.sort()
-            if labels == device_labels:
-                function_return = False
-            else:
-                function_return = labels
-        else:
-            module.fail_json(msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(function="compareLables", msg=to_text(exc))
+    response = http_request_func("GET", url, headers, payload, module)
+    device_data = response.json()
+    device_labels = []
+    for device_label in device_data["device"]["labels"]:
+        device_labels.append(device_label["id"])
+    device_labels.sort()
+    if labels:
+        labels.sort()
+    if labels == device_labels:
+        function_return = False
+    else:
+        function_return = labels
     return function_return
 
 
@@ -373,22 +367,16 @@ def delete_device(base_url, api_version, auth, device_id, module):
     logging.info("Deleting Site...")
     url = f"{base_url}/device/{api_version}/device/{device_id}"
     payload = {}
-    headers = auth
-    try:
-        response = requests.request(
-            "DELETE", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            logging.info("Device deleted successfully")
-        else:
-            module.fail_json(msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(msg=to_text(exc))
+    headers = auth 
+    for i in range(2): # Need to archive and then delete.
+        http_request_func("DELETE", url, headers, payload, module)
+        i += 1
+    logging.info("Device deleted successfully")
 
 
 def check_device(auth, module, region):
     """Function to check if the device exists in kentik"""
-    logging.info("Creating Device...")
+    logging.info("Checking if the device needs updated...")
     device_name = module.params["deviceName"]
     if region == "EU":
         url = f"https://api.kentik.eu/api/v5/device/{device_name}"
@@ -396,25 +384,14 @@ def check_device(auth, module, region):
         url = f"https://api.kentik.com/api/v5/device/{device_name}"
     headers = auth
     device_data = {}
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, timeout=30
-        )
-        if response.status_code == 200:
-            device_data['exists'] = True
-            device_info = response.json()
-            device_data['id'] = device_info['device']['id']
-        elif response.status_code == 404:
-            device_data['exists'] = False
-        else:
-            module.fail_json(
-                function="check_device",
-                stats_code=response.status_code,
-                msg=response.text,
-            )
-    except ConnectionError as exc:
-        module.fail_json(function="check_device", msg=to_text(exc))
-
+    payload = {}
+    response = http_request_func("GET", url, headers, payload, module)
+    if response:
+        device_data['exists'] = True
+        device_info = response.json()
+        device_data['id'] = device_info['device']['id']
+    else:
+        device_data['exists'] = False
     return device_data
 
 
@@ -425,21 +402,8 @@ def create_device(base_url, api_version, auth, module, device_object):
     payload = json.dumps({"device": device_object})
     headers = auth
     device_data = ''
-    try:
-        response = requests.request(
-            "POST", url, headers=headers, data=payload, timeout=20
-        )
-        if response.status_code == 200:
-            device_data = response.json()
-        else:
-            module.fail_json(
-                function="create_device",
-                stats_code=response.status_code,
-                msg=response.text,
-            )
-    except ConnectionError as exc:
-        module.fail_json(function="create_device", msg=to_text(exc))
-
+    response = http_request_func("POST", url, headers, payload, module)
+    device_data = response.json()
     return device_data["device"]["id"]
 
 
@@ -454,16 +418,8 @@ def update_device_labels(base_url, api_version, auth, module, device_id, labels)
         label_dict = {"id": int(label)}
         labels_list.append(label_dict)
     payload = json.dumps({"id": device_id, "labels": labels_list})
-    try:
-        response = requests.request(
-            "PUT", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            device_data = response.json()
-        else:
-            module.fail_json(function="update_device_labels", msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(function="update_device_labels", msg=to_text(exc))
+    response = http_request_func("PUT", url, headers, payload, module)
+    device_data = response.json()
     return device_data["device"]["id"]
 
 
@@ -474,17 +430,8 @@ def update_check(base_url, api_version, auth, module, device_id, device_object, 
     headers = auth
     device_data = {}
     payload = {}
-    try:
-        response = requests.request(
-            "GET", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            device_data = response.json()
-        else:
-            module.fail_json(function="update_device_labels", msg=response.text)
-    except ConnectionError as exc:
-        module.fail_json(function="update_device_labels", msg=to_text(exc))
-
+    response = http_request_func("GET", url, headers, payload, module)
+    device_data = response.json()
     if "nms" in device_object:
         logging.info("NMS will be configured...")
         if "port" in device_object["nms"]["snmp"]:
@@ -530,21 +477,8 @@ def update_device(base_url, api_version, auth, module, device_id, device_object)
     payload = json.dumps({"device": device_object})
     headers = auth
     device_data = ''
-    try:
-        response = requests.request(
-            "PUT", url, headers=headers, data=payload, timeout=30
-        )
-        if response.status_code == 200:
-            device_data = response.json()
-        else:
-            module.fail_json(
-                function="update_device",
-                stats_code=response.status_code,
-                msg=response.text,
-            )
-    except ConnectionError as exc:
-        module.fail_json(function="create_device", msg=to_text(exc))
-
+    response = http_request_func("PUT", url, headers, payload, module)
+    device_data = response.json()
     return device_data["device"]["id"]
 
 
@@ -625,37 +559,37 @@ def main():
         logging.info("No Labels found")
         labels = False
     update_snmp_auth_bool = module.params["updateSnmpAuth"]
-    device_object = build_payload(base_url, auth, module)
     result = {"changed": False}
     # device_list = gather_devices(base_url, api_version, auth, module)
     # device_id = compare_device(device_list, module)
     device_exists = check_device(auth, module, region)
-    if device_exists['exists']:
+    if state == "absent" and device_exists['exists']:
+        delete_device(base_url, api_version, auth, device_exists['id'], module)
+        result["changed"] = True
+    elif device_exists['exists'] and state =="present":
         labels = compare_labels(base_url, api_version, auth, module, device_exists['id'], labels)
+        device_object = build_payload(base_url, auth, module)
         needs_updated = update_check(base_url,
                                      api_version,
                                      auth, module,
                                      device_exists['id'],
                                      device_object,
                                      update_snmp_auth_bool)
-        if state == "present" and needs_updated:
+        if needs_updated:
             update_device(base_url, api_version, auth, module, device_exists['id'], device_object)
             result["changed"] = True
-        elif state == "present":
+        else:
             result["changed"] = False
-        elif state == "absent":
-            delete_device(base_url, api_version, auth, device_exists['id'], module)
-            result["changed"] = True
-    else:
-        if state == "present":
-            device_id = create_device(
-                base_url, api_version, auth, module, device_object
+    elif not device_exists['exists'] and state == "present":
+        device_object = build_payload(base_url, auth, module)
+        device_id = create_device(
+        base_url, api_version, auth, module, device_object
             )
-            result["changed"] = True
-            result["device_id"] = device_id
-        elif state == "absent":
-            result["changed"] = False
-    if labels and len(labels) > 0:
+        result["changed"] = True
+        result["device_id"] = device_id
+    elif state == "absent" and not device_exists['exists']:
+        result["changed"] = False
+    if labels and len(labels) > 0 and state == "present":
         update_device_labels(base_url, api_version, auth, module, device_id, labels)
         result["changed"] = True
     module.exit_json(**result)
