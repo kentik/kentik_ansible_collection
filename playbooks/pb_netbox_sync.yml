@@ -9,7 +9,7 @@
 
     - name: Collect List of Sites from netbox
       ansible.builtin.uri:
-        url: "https://{{ netbox_host }}/api/dcim/sites"
+        url: "https://{{ netbox_host }}/api/dcim/sites/?limit=0"
         validate_certs: false
         headers:
           authorization: "Token {{ netbox_token }}"
@@ -32,7 +32,7 @@
 
     - name: Gather device roles from Netbox
       ansible.builtin.uri:
-        url: "https://{{ netbox_host }}/api/dcim/device-roles/"
+        url: "https://{{ netbox_host }}/api/dcim/device-roles/?limit=0"
         validate_certs: false
         headers:
           authorization: Token {{ netbox_token }}
@@ -42,7 +42,7 @@
 
     - name: Gather tenants from Netbox
       ansible.builtin.uri:
-        url: "https://{{ netbox_host }}/api/tenancy/tenants"
+        url: "https://{{ netbox_host }}/api/tenancy/tenants/?limit=0"
         validate_certs: false
         headers:
           authorization: Token {{ netbox_token }}
@@ -52,7 +52,7 @@
 
     - name: Gather tags from Netbox
       ansible.builtin.uri:
-        url: "https://{{ netbox_host }}/api/extras/tags"
+        url: "https://{{ netbox_host }}/api/extras/tags/?limit=0"
         validate_certs: false
         headers:
           authorization: Token {{ netbox_token }}
