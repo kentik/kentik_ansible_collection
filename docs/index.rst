@@ -1,7 +1,5 @@
-
-
 .. meta::
-  :antsibull-docs: 2.11.0
+  :antsibull-docs: 2.16.3
 
 
 .. _plugins_in_kentik.kentik_config:
@@ -9,7 +7,7 @@
 Kentik.Kentik_Config
 ====================
 
-Collection version 1.0.0
+Collection version 1.2.0
 
 .. contents::
    :local:
@@ -36,6 +34,9 @@ Ansible Modules for Kentik
   - title: "Repository (Sources)"
     url: "https://github.com/kentik/kentik_ansible_collection"
     external: true
+  - title: "Report an issue"
+    url: "https://github.com/kentik/kentik_ansible_collection/issues/new/choose"
+    external: true
 
 
 
@@ -54,6 +55,7 @@ Modules
 
 * :ansplugin:`kentik_device module <kentik.kentik_config.kentik_device#module>` -- This is a module that will perform idempotent operations on kentik device management
 * :ansplugin:`kentik_label module <kentik.kentik_config.kentik_label#module>` -- This is a module that will perform idempotent operations on kentik label management.
+* :ansplugin:`kentik_netbox_prefixes module <kentik.kentik_config.kentik_netbox_prefixes#module>` -- This is a module that will perform idempotent operations to synchronize netbox prefixes.
 * :ansplugin:`kentik_site module <kentik.kentik_config.kentik_site#module>` -- This is a module that will perform idempotent operations on kentik site management.
 
 .. toctree::
@@ -62,10 +64,5 @@ Modules
 
     kentik_device_module
     kentik_label_module
+    kentik_netbox_prefixes_module
     kentik_site_module
-
-
-
-.. seealso::
-
-    List of :ref:`collections <list_of_collections>` with docs hosted here.

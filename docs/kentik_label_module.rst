@@ -1,13 +1,13 @@
-
 .. Document meta
 
 :orphan:
+:github_url: https://github.com/kentik/kentik_ansible_collection/edit/main/plugins/modules/kentik_label.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!---%20Your%20description%20here%20--%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr
 
 .. |antsibull-internal-nbsp| unicode:: 0xA0
     :trim:
 
 .. meta::
-  :antsibull-docs: 2.11.0
+  :antsibull-docs: 2.16.3
 
 .. Anchors
 
@@ -23,7 +23,7 @@ kentik.kentik_config.kentik_label module -- This is a module that will perform i
 .. Collection note
 
 .. note::
-    This module is part of the `kentik.kentik_config collection <https://galaxy.ansible.com/ui/repo/published/kentik/kentik_config/>`_ (version 1.0.0).
+    This module is part of the `kentik.kentik_config collection <https://galaxy.ansible.com/ui/repo/published/kentik/kentik_config/>`_ (version 1.2.0).
 
     It is not included in ``ansible-core``.
     To check whether it is installed, run :code:`ansible-galaxy collection list`.
@@ -96,7 +96,7 @@ Parameters
 
       .. ansible-option-type-line::
 
-        :ansible-option-type:`string`
+        :ansible-option-type:`string` / :ansible-option-required:`required`
 
       .. raw:: html
 
@@ -316,7 +316,6 @@ Examples
 
 .. code-block:: yaml+jinja
 
-    
     # Pass in a message
     - name: Create a Label
       kentik_label:
@@ -334,7 +333,6 @@ Examples
       kentik_label:
         name: fail me because wrong state
         state: create
-
 
 
 
@@ -474,7 +472,9 @@ Collection links
   - title: "Repository (Sources)"
     url: "https://github.com/kentik/kentik_ansible_collection"
     external: true
+  - title: "Report an issue"
+    url: "https://github.com/kentik/kentik_ansible_collection/issues/new/choose"
+    external: true
 
 
 .. Parsing errors
-

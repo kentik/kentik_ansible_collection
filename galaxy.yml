@@ -2,7 +2,7 @@
 namespace: kentik
 name: kentik_config
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.1.0
+version: 1.2.0
 readme: README.md
 authors:
 - "Ethan Angele (@kentikethan)"
@@ -17,3 +17,7 @@ repository: https://github.com/kentik/kentik_ansible_collection
 documentation: https://github.com/kentik/kentik_ansible_collection/blob/main/README.md
 homepage: https://github.com/kentik/kentik_ansible_collection
 issues: https://github.com/kentik/kentik_ansible_collection/issues
+build_ignore:
+- '*credentials*'
+- '*venv*'
+- '*local_*'

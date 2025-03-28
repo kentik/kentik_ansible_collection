@@ -3,9 +3,9 @@ ansible-core==2.18.1
 certifi==2024.12.14
 cffi==1.17.1
 charset-normalizer==3.4.1
-cryptography==44.0.0
+cryptography==44.0.1
 idna==3.10
-Jinja2==3.1.5
+Jinja2==3.1.6
 MarkupSafe==3.0.2
 packaging==24.2
 pycparser==2.22
