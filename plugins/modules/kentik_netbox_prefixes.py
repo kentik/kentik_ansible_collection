@@ -283,9 +283,10 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
             continue
         try:
             logging.info("Updating site (%s)", name)
+            config_id = config["id"]
             response = requests.request(
                 "PUT",
-                f"{url}/site/v202211/sites/{config["id"]}",
+                f"{url}/site/v202211/sites/{config_id}",
                 headers=kentik_auth,
                 data=json.dumps({"site": config}),
                 timeout=30
