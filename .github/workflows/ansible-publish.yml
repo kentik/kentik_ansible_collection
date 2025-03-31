@@ -1,0 +1,25 @@
+name: Publish Ansible Collection
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+
+jobs:
+  publish:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ansible
+
+      - name: Publish Collection
+        uses: ansible/ansible-publish-action@main # Use the Ansible action
+        with:
+          collection_dir: . # Or the path to your collection directory
+          galaxy_api_token: ${{ secrets.ANSIBLE_GALAXY_TOKEN }} # Access the secret
