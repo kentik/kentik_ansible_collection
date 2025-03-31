@@ -172,8 +172,9 @@ def collect_prefixes(module, headers):
     """ Collect the prefixes from Netbox """
     # Could add streaming support potentially?
     prefixes = []
+    url = module.params["netboxUrl"]
     try:
-        response = requests.get(f"{module.params["netboxUrl"]}/api/ipam/prefixes",
+        response = requests.get(f"{url}/api/ipam/prefixes",
                                 headers=headers,
                                 timeout=30,
                                 stream=True)
