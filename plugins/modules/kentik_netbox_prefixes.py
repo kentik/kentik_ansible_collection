@@ -193,8 +193,8 @@ def collect_prefixes(module, headers):
                               **({"role": item["role"]["name"]}
                               if item["role"] is not None else {}),
                               **({custom_field_name:
-                                 item["custom_fields"][f"{module.params["customFieldName"]}"]}
-                              if f"{module.params["customFieldName"]}" in item["custom_fields"]
+                                 item["custom_fields"][custom_field_name]}
+                              if custom_field_name in item["custom_fields"]
                               else {}),
                               **({"description": item["description"]}
                               if item["description"] is not None else {})
