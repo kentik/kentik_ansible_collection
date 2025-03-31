@@ -182,6 +182,7 @@ def collect_prefixes(module, headers):
             if raw_data:
                 data = json.loads(raw_data)
                 for item in data["results"]:
+                    custom_field_name = module.params["customFieldName"]
                     prefix = {"prefix": item["prefix"],
                               **({"site": item["site"]["name"]}
                               if item["site"] is not None else {}),
@@ -191,7 +192,7 @@ def collect_prefixes(module, headers):
                               if item["vlan"] is not None else {}),
                               **({"role": item["role"]["name"]}
                               if item["role"] is not None else {}),
-                              **({f"{module.params['customFieldName']}":
+                              **({custom_field_name:
                                  item["custom_fields"][f"{module.params["customFieldName"]}"]}
                               if f"{module.params["customFieldName"]}" in item["custom_fields"]
                               else {}),
