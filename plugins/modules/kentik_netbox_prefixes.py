@@ -271,7 +271,8 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
                         prefix["prefix"])
                     prefix_list.append(prefix["site"])
             else:
-                warnings.append(f"Site does not exist: {prefix["site"]}")
+                site_warning = prefix["site"]
+                warnings.append(f"Site does not exist: {site_warning}")
     # Remove sites from the update list that do not need to be updated.
     if not prefix_list:
         result = {"Sites": "No Change"}
