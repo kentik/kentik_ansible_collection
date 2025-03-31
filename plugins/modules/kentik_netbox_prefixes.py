@@ -191,7 +191,7 @@ def collect_prefixes(module, headers):
                               if item["vlan"] is not None else {}),
                               **({"role": item["role"]["name"]}
                               if item["role"] is not None else {}),
-                              **({f"{module.params["customFieldName"]}":
+                              **({f"{module.params['customFieldName']}":
                                  item["custom_fields"][f"{module.params["customFieldName"]}"]}
                               if f"{module.params["customFieldName"]}" in item["custom_fields"]
                               else {}),
