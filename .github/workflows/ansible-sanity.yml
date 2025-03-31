@@ -11,10 +11,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Perform sanity testing with ansible-test
+      - name: Perform sanity testing with ansible-test on python 3.6
         uses: ansible-community/ansible-test-gh-action@release/v1
         with:
           ansible-core-version: stable-2.14
           testing-type: sanity
-          target-python-version: 3.6,3.7,3.8,3.9,3.10,3.11
+          target-python-version: 3.6
+          sanity-skip-tests: ansible-doc
+      
+      - name: Perform sanity testing with ansible-test on python 3.11
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: stable-2.14
+          testing-type: sanity
+          target-python-version: 3.11
           sanity-skip-tests: ansible-doc
