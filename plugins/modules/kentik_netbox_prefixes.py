@@ -281,7 +281,7 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
         try:
             logging.info("Updating site (%s)", name)
             response = requests.request(
-                "PUT", 
+                "PUT",
                 f"{url}/site/v202211/sites/{config["id"]}",
                 headers=kentik_auth,
                 data=json.dumps({"site": config}),
@@ -378,7 +378,7 @@ def http_request_func(method, url, headers, payload, module, retries=0):
                 module.fail_json(msg=response.text)
             if 'x-ratelimit-remaining' in response.headers:
                 if int(response.headers['x-ratelimit-remaining']) < 10:
-                    time.sleep(10) # Helps to slow down the rate of execution for throttling.
+                    time.sleep(10)  # Helps to slow down the rate of execution for throttling.
         except ConnectionError as exc:
             module.fail_json(msg=to_text(exc))
     else:

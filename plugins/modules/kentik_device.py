@@ -280,7 +280,7 @@ def http_request_func(method, url, headers, payload, module, retries=0):
                 module.fail_json(msg=response.text)
             if 'x-ratelimit-remaining' in response.headers:
                 if int(response.headers['x-ratelimit-remaining']) < 10:
-                    time.sleep(10) # Helps to slow down the rate of execution for throttling.
+                    time.sleep(10)  # Helps to slow down the rate of execution for throttling.
         except ConnectionError as exc:
             module.fail_json(msg=to_text(exc))
     else:
@@ -367,8 +367,8 @@ def delete_device(base_url, api_version, auth, device_id, module):
     logging.info("Deleting Site...")
     url = f"{base_url}/device/{api_version}/device/{device_id}"
     payload = {}
-    headers = auth 
-    for i in range(2): # Need to archive and then delete.
+    headers = auth
+    for i in range(2):  # Need to archive and then delete.
         http_request_func("DELETE", url, headers, payload, module)
         i += 1
     logging.info("Device deleted successfully")
@@ -566,7 +566,7 @@ def main():
     if state == "absent" and device_exists['exists']:
         delete_device(base_url, api_version, auth, device_exists['id'], module)
         result["changed"] = True
-    elif device_exists['exists'] and state =="present":
+    elif device_exists['exists'] and state == "present":
         labels = compare_labels(base_url, api_version, auth, module, device_exists['id'], labels)
         device_object = build_payload(base_url, auth, module)
         needs_updated = update_check(base_url,
@@ -582,9 +582,11 @@ def main():
             result["changed"] = False
     elif not device_exists['exists'] and state == "present":
         device_object = build_payload(base_url, auth, module)
-        device_id = create_device(
-        base_url, api_version, auth, module, device_object
-            )
+        device_id = create_device(base_url,
+                                  api_version,
+                                  auth,
+                                  module,
+                                  device_object)
         result["changed"] = True
         result["device_id"] = device_id
     elif state == "absent" and not device_exists['exists']:

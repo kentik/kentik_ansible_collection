@@ -185,6 +185,7 @@ def compare_site(site_list, module):
         function_return = False
     return function_return
 
+
 def http_request_func(method, url, headers, payload, module, retries=0):
     """Function for hanlding HTTP Requests"""
     if retries < 3:
@@ -201,12 +202,13 @@ def http_request_func(method, url, headers, payload, module, retries=0):
             else:
                 module.fail_json(msg=response.text)
             if int(response.headers['x-ratelimit-remaining']) < 10:
-                time.sleep(10) # Helps to slow down the rate of execution for throttling.
+                time.sleep(10)  # Helps to slow down the rate of execution for throttling.
         except ConnectionError as exc:
             module.fail_json(msg=to_text(exc))
     else:
         module.fail_json(msg=response.text)
     return response
+
 
 def delete_site(base_url, api_version, auth, site_id, module):
     """Function to delete a site"""

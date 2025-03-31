@@ -1,0 +1,18 @@
+name: Ansible Sanity Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  sanity_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Perform sanity testing with ansible-test
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: stable-2.14
+          testing-type: sanity
