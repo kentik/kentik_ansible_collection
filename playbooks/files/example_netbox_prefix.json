@@ -11,7 +11,7 @@
         "enableCustomFields": false,
         "customFieldName": "POD",
         "activeOnly": true,
-        "email": "email",
-        "token": "ewrt34trehgfn"
+        "email": "test@test.com",
+        "token": "testtoken"
     }
 }
