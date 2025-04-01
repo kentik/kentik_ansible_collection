@@ -259,7 +259,7 @@ def build_payload(base_url, auth, module):
 
 
 def http_request_func(method, url, headers, payload, module, retries=0):
-    """Function for hanlding HTTP Requests"""
+    """Function for handling HTTP Requests"""
     if retries < 3:
         try:
             response = requests.request(
