@@ -100,7 +100,7 @@ options:
         - Reference Kentik API Documentation for exact dictionary format.
         type: dict
     state:
-        description: Whether to ensure the device should be present or if it should be removed.
+        description: Whether to ensure the device should be present or if it should be removed. Run twice on absent to delete.
         type: str
         choices: [present, absent]
         default: present
@@ -364,13 +364,11 @@ def compare_labels(base_url, api_version, auth, module, device_id, labels):
 
 def delete_device(base_url, api_version, auth, device_id, module):
     """Function to delete a device from Kentik"""
-    logging.info("Deleting Site...")
+    logging.info("Archiving Device...")
     url = f"{base_url}/device/{api_version}/device/{device_id}"
     payload = {}
     headers = auth
-    for i in range(2):  # Need to archive and then delete.
-        http_request_func("DELETE", url, headers, payload, module)
-        i += 1
+    http_request_func("DELETE", url, headers, payload, module)
     logging.info("Device deleted successfully")
 
 
