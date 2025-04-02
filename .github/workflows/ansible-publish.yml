@@ -21,5 +21,5 @@ jobs:
       - name: Publish Collection
         uses: ansible/ansible-publish-action@main # Use the Ansible action
         with:
-          collection_dir: . # Or the path to your collection directory
-          galaxy_api_token: ${{ secrets.ANSIBLE_GALAXY_TOKEN }} # Access the secret
+          src_path: . # Or the path to your collection directory
+          api_key: ${{ secrets.ANSIBLE_GALAXY_TOKEN }} # Access the secret
