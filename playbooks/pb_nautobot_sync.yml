@@ -115,7 +115,7 @@
           ipAddress: "{{ primary_ip4 }}"
           snmp:
             credentialName: snmp_v2_read_only
-        labels: "{{ label }}"
+        labels: "{{ labels }}"
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
         state: absent
