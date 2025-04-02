@@ -5,15 +5,13 @@
   vars_files:
     - ./vars/credentials.yml
 
-
   tasks:
-
     - name: Collect List of Sites from Nautobot
-      uri: 
-        url: "https://{{ nautobot_host }}/api/dcim/locations"
+      ansible.builtin.uri:
+        url: "https://{{ nautobot_host }}/api/dcim/locations/?limit=0"
         validate_certs: false
         headers:
-          authorization: "Token {{nautobot_token}}"
+          authorization: "Token {{ nautobot_token }}"
       register: nautobot_sites
       delegate_to: localhost
       run_once: true
@@ -32,35 +30,35 @@
       loop: "{{ nautobot_sites.json.results }}"
 
     - name: Gather Device Roles from Nautobot
-      uri: 
-        url: "https://{{ nautobot_host }}/api/extras/roles"
+      ansible.builtin.uri:
+        url: "https://{{ nautobot_host }}/api/extras/roles/?limit=0"
         validate_certs: false
         headers:
-          authorization: Token {{nautobot_token}}
+          authorization: Token {{ nautobot_token }}
       register: nautobot_roles
       delegate_to: localhost
       run_once: true
-    
+
     - name: Gather Tenants from Nautobot
-      uri: 
-        url: "https://{{ nautobot_host }}/api/tenancy/tenants"
+      ansible.builtin.uri:
+        url: "https://{{ nautobot_host }}/api/tenancy/tenants/?limit=0"
         validate_certs: false
         headers:
-          authorization: Token {{nautobot_token}}
+          authorization: Token {{ nautobot_token }}
       register: nautobot_tenants
       delegate_to: localhost
       run_once: true
-    
+
     - name: Gather Tags from Nautobot
-      uri: 
-        url: "https://{{ nautobot_host }}/api/extras/tags"
+      ansible.builtin.uri:
+        url: "https://{{ nautobot_host }}/api/extras/tags/?limit=0"
         validate_certs: false
         headers:
-          authorization: Token {{nautobot_token}}
+          authorization: Token {{ nautobot_token }}
       register: nautobot_tags
       delegate_to: localhost
       run_once: true
-    
+
     - name: Create Device Role Labels
       kentik.kentik_config.kentik_label:
         name: "{{ item['name'] }}"
@@ -91,9 +89,13 @@
       loop: "{{ nautobot_tags.json.results }}"
       run_once: true
 
-    - name: Set Fact for Labels
-      set_fact:
-        tags: "{{ device_roles + tenants + tags }}"
+    - name: Set fact for labels
+      ansible.builtin.set_fact:
+        labels: "{{ device_roles + tenants + tags }}"
+
+    - name: Print labels
+      ansible.builtin.debug:
+        var: labels
 
     - name: Print Tags
       debug:
@@ -109,10 +111,10 @@
         deviceSnmpIp: "{{ primary_ip4 }}"
         deviceSnmpCommunity: kentik
         nms:
-            agentId: "183"
-            ipAddress: "{{ primary_ip4 }}"
-            snmp:
-                credentialName: snmp_v2_read_only
+          agentId: "183"
+          ipAddress: "{{ primary_ip4 }}"
+          snmp:
+            credentialName: snmp_v2_read_only
         labels: "{{ tags }}"
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
