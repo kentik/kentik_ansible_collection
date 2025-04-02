@@ -121,7 +121,7 @@
     - name: Sync Prefixes
       kentik.kentik_config.kentik_netbox_prefixes:
         netboxUrl: "https://{{ netbox_host }}"
-        netboxToken: "{{netbox_token}}"
+        netboxToken: "{{ netbox_token }}"
         enableTenant: True
         tenantName: "tenants"
         enableSitebyIP: True
