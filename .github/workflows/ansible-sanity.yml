@@ -1,0 +1,28 @@
+name: Ansible Sanity Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  sanity_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Perform sanity testing with ansible-test on python 3.6
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: stable-2.14
+          testing-type: sanity
+          target-python-version: 3.6
+          sanity-skip-tests: ansible-doc
+      
+      - name: Perform sanity testing with ansible-test on python 3.11
+        uses: ansible-community/ansible-test-gh-action@release/v1
+        with:
+          ansible-core-version: stable-2.14
+          testing-type: sanity
+          target-python-version: 3.11
+          sanity-skip-tests: ansible-doc

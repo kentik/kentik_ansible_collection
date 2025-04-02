@@ -1,0 +1,17 @@
+{
+    "ANSIBLE_MODULE_ARGS": {
+        "netboxUrl": "https://netboxurl",
+        "netboxToken": "dfdsgreayertyherthbdfgz",
+        "enableTenant": false,
+        "tenantName": "tenants",
+        "enableSitebyIP": true,
+        "enableRoles": false,
+        "enableDescriptions": false,
+        "enableVlan": false,
+        "enableCustomFields": false,
+        "customFieldName": "POD",
+        "activeOnly": true,
+        "email": "test@test.com",
+        "token": "testtoken"
+    }
+}

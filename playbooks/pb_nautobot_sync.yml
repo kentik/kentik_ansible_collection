@@ -97,6 +97,10 @@
       ansible.builtin.debug:
         var: labels
 
+    - name: Print Tags
+      debug:
+        var: tags
+
     - name: Create Device
       kentik.kentik_config.kentik_device:
         deviceName: "{{ inventory_hostname }}"
@@ -111,7 +115,8 @@
           ipAddress: "{{ primary_ip4 }}"
           snmp:
             credentialName: snmp_v2_read_only
-        labels: "{{ labels }}"
+        labels: "{{ tags }}"
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
+        state: absent
       delegate_to: localhost

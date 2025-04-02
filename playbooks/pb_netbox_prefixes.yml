@@ -1,0 +1,26 @@
+---
+- name: "MAIN >> SYNC NETBOX TO KENTIK << MUST USE NETBOX INVENTORY"
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - ./vars/credentials.yml
+
+  tasks:    
+    - name: Sync Prefixes
+      kentik.kentik_config.kentik_netbox_prefixes:
+        netboxUrl: "https://{{ netbox_host }}"
+        netboxToken: "{{netbox_token}}"
+        enableTenant: True
+        tenantName: "tenants"
+        enableSitebyIP: True
+        enableRoles: True
+        enableDescriptions: True
+        enableVlan: True
+        enableCustomFields: True
+        customFieldName: POD
+        activeOnly: True
+        email: "{{ kentik_user }}"
+        token: "{{ kentik_token }}"
+        region: US
+      delegate_to: localhost
+      run_once: true
