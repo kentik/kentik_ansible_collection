@@ -118,5 +118,4 @@
         labels: "{{ labels }}"
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
-        state: absent
       delegate_to: localhost
