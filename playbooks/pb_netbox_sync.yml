@@ -19,7 +19,7 @@
 
     - name: Create the sites
       kentik.kentik_config.kentik_site:
-        title: "{{ item['slug'] }}"
+        title: "{{ item['name'] }}"
         lat: "{{ item['latitude'] | int }}"
         lon: "{{ item['longitude'] | int }}"
         state: present
@@ -103,7 +103,7 @@
         deviceName: "{{ inventory_hostname }}"
         deviceSampleRate: 10
         planName: Free Flowpak Plan
-        siteName: "{{ sites[0] }}"
+        siteName: "{{ sites[0]['name'] }}"
         sendingIps: ["{{ primary_ip4 }}"]
         deviceSnmpIp: "{{ primary_ip4 }}"
         deviceSnmpCommunity: kentik
@@ -117,20 +117,20 @@
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
       delegate_to: localhost
-    
+
     - name: Sync Prefixes
       kentik.kentik_config.kentik_netbox_prefixes:
         netboxUrl: "https://{{ netbox_host }}"
-        netboxToken: "{{netbox_token}}"
-        enableTenant: True
+        netboxToken: "{{ netbox_token }}"
+        enableTenant: true
         tenantName: "tenants"
-        enableSitebyIP: True
-        enableRoles: True
-        enableDescriptions: True
-        enableVlan: True
-        enableCustomFields: True
+        enableSitebyIP: true
+        enableRoles: true
+        enableDescriptions: true
+        enableVlan: true
+        enableCustomFields: true
         customFieldName: POD
-        activeOnly: True
+        activeOnly: true
         email: "{{ kentik_user }}"
         token: "{{ kentik_token }}"
         region: US

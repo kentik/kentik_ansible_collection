@@ -4,3 +4,4 @@ validate_certs: False
 config_context: False
 device_query_filters:
   - has_primary_ip: 'true'
+  #- role: 'branch_wan'
