@@ -36,7 +36,7 @@ We also use the following guidelines:
 Tested with Ansible Core >= 2.14.2 versions, and the current development version of Ansible. Ansible Core versions prior to 2.14.2 are not supported.
 
 ## External requirements
-- [Kentik portal account](https://portal.kentik/com)
+- [Kentik portal account](https://portal.kentik.com)
 
 ## Example playbook
     ---
