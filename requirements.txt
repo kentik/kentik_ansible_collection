@@ -11,6 +11,6 @@ packaging==24.2
 pycparser==2.22
 pytz==2024.2
 PyYAML==6.0.2
-requests==2.32.3
+requests==2.32.4
 resolvelib==1.0.1
 urllib3==2.3.0
