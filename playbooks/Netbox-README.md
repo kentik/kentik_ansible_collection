@@ -216,5 +216,25 @@ device_query_filters:
   #- role: 'edge-router'
 ```
 
+In addition to being able to filter based on tags or roles (which are device specific), you can also filter based on broader inventory attributes. We do this by using the `query_filter` syntax:
+
+```yaml
+plugin: netbox.netbox.nb_inventory
+api_endpoint: https://127.0.0.1
+validate_certs: False
+config_context: False
+site_data: true
+query_filters:
+  - site: clab
+device_query_filters:
+  - has_primary_ip: 'true'
+  - tag: 'tag1'
+  ```
+
+In the above example, in addition to filtering devices that have a primary_ip defined, and has `tag1` applied, we're also only going to look for devices in site `clab`.
+
+NOTE: The site syntax is the slug, not the textual name of the site. 
+
+
 <br/>
 
