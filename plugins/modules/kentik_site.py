@@ -296,7 +296,7 @@ def main():
         lon=dict(type="float", required=False, default=0),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"]),
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"]),
         state=dict(default="present", choices=["present", "absent"]),
         siteMarket=dict(type="str", required=False, default=""),
         infrastructureNetworks=dict(type="list", required=False, elements="str"),
@@ -317,6 +317,9 @@ def main():
     }
     if module.params["region"] == "EU":
         base_url = "https://grpc.api.kentik.eu/site/"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         base_url = "https://grpc.api.kentik.com/site/"
     api_version = "v202211"

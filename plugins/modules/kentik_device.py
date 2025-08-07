@@ -529,7 +529,7 @@ def main():
         labels=dict(type="list", required=False, elements="str"),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"]),
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"]),
         state=dict(type="str", default="present", choices=["present", "absent"]),
     )
     module = AnsibleModule(
@@ -546,6 +546,9 @@ def main():
     if module.params["region"] == "EU":
         base_url = "https://grpc.api.kentik.eu"
         region = "EU"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         base_url = "https://grpc.api.kentik.com"
         region = "US"
