@@ -106,10 +106,10 @@
         siteName: "{{ sites[0]['name'] }}"
         sendingIps: ["{{ primary_ip4 }}"]
         deviceSnmpIp: "{{ primary_ip4 }}"
-        deviceSnmpCommunity: kentik
+        deviceSnmpCommunity: default
         minimizeSnmp: false
         nms:
-          agentId: "27"
+          agentId: "1367"
           ipAddress: "{{ primary_ip4 }}"
           snmp:
             credentialName: default
