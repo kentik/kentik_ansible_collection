@@ -1,9 +1,7 @@
 plugin: networktocode.nautobot.inventory
-api_endpoint: https://demo.nautobot.com/
+api_endpoint: https://192.0.2.12
 validate_certs: False
 config_context: False
-query_filters:
-  - site: ber01_germany_emea_b8bf
 device_query_filters:
   - has_primary_ip: 'true'
   #- role: 'branch_wan'

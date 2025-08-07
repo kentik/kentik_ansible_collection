@@ -1,5 +1,5 @@
 plugin: netbox.netbox.nb_inventory
-api_endpoint: https://xglw4450.cloud.netboxapp.com
+api_endpoint: https://127.0.0.1
 validate_certs: False
 config_context: False
 site_data: true
