@@ -50,6 +50,7 @@ options:
         choices:
             - US
             - EU
+            - ENV
     state:
         description: States whether to delete or create.
         type: str

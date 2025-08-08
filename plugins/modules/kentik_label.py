@@ -28,6 +28,7 @@ options:
         choices:
         - US
         - EU
+        - ENV
     state:
         description: Whether to ensure the device should be present or if it should be removed.
         type: str

@@ -75,6 +75,7 @@ options:
         choices:
             - US
             - EU
+            - ENV
     token:
         description: The Kentik API Token used to authenticate.
         type: str

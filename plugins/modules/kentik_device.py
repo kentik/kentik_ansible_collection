@@ -93,7 +93,7 @@ options:
         description: The reqion that your Kentik portal is located in.
         type: str
         default: US
-        choices: [ US, EU ]
+        choices: [ US, EU, ENV ]
     nms:
         description:
         - A dictionary for adding NMS SNMP or streaming telemetry to a device.
