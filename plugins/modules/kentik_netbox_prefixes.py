@@ -3,6 +3,7 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
+from os import environ
 
 __metaclass__ = type
 
@@ -641,7 +642,7 @@ def main():
         activeOnly=dict(type="bool", required=False, default=True),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"])
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"])
     )
     module = AnsibleModule(
         argument_spec=argument_spec,
