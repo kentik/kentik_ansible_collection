@@ -147,8 +147,7 @@ except ImportError:
     HAS_ANOTHER_LIBRARY = False
 import json
 import logging
-from os import environ
-
+import os
 logging.basicConfig(level=logging.INFO)
 
 

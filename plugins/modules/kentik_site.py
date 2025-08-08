@@ -133,7 +133,7 @@ except ImportError:
 import json
 import logging
 import time
-from os import environ
+import os
 logging.basicConfig(level=logging.INFO)
 
 

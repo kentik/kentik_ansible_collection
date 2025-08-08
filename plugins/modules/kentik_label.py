@@ -88,7 +88,7 @@ except ImportError:
     HAS_ANOTHER_LIBRARY = False
 import json
 import logging
-from os import environ
+import os
 
 
 def build_payload(module):
