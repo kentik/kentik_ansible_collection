@@ -84,6 +84,17 @@ You can also install a specific version of the collection, for example, if you n
 
 See using Ansible collections for more details.
 
+## Choosing the correct environment
+
+The Kentik Ansible Collection supports the `region:` variable. This allows the customer to choose between the US, EU or local Kentik installation. The default selection is `US`. 
+
+Customers who want to test with a local installation of Kentik can set a base URL via an envrionment varialbale `ENV`
+
+```
+$ export ENV="https://api.localinstall.com"
+```
+
+
 ## Release notes
 See the changelog.
 

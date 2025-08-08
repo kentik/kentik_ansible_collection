@@ -93,7 +93,7 @@ options:
         description: The reqion that your Kentik portal is located in.
         type: str
         default: US
-        choices: [ US, EU ]
+        choices: [ US, EU, ENV ]
     nms:
         description:
         - A dictionary for adding NMS SNMP or streaming telemetry to a device.
@@ -163,6 +163,7 @@ message:
 import json
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_text
+import os
 try:
     import requests
 except ImportError:
@@ -529,7 +530,7 @@ def main():
         labels=dict(type="list", required=False, elements="str"),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"]),
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"]),
         state=dict(type="str", default="present", choices=["present", "absent"]),
     )
     module = AnsibleModule(
@@ -546,6 +547,9 @@ def main():
     if module.params["region"] == "EU":
         base_url = "https://grpc.api.kentik.eu"
         region = "EU"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         base_url = "https://grpc.api.kentik.com"
         region = "US"

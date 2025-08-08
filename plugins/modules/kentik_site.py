@@ -4,6 +4,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 DOCUMENTATION = r"""
@@ -50,6 +51,7 @@ options:
         choices:
             - US
             - EU
+            - ENV
     state:
         description: States whether to delete or create.
         type: str
@@ -131,6 +133,7 @@ except ImportError:
 import json
 import logging
 import time
+import os
 logging.basicConfig(level=logging.INFO)
 
 
@@ -296,7 +299,7 @@ def main():
         lon=dict(type="float", required=False, default=0),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"]),
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"]),
         state=dict(default="present", choices=["present", "absent"]),
         siteMarket=dict(type="str", required=False, default=""),
         infrastructureNetworks=dict(type="list", required=False, elements="str"),
@@ -317,6 +320,9 @@ def main():
     }
     if module.params["region"] == "EU":
         base_url = "https://grpc.api.kentik.eu/site/"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         base_url = "https://grpc.api.kentik.com/site/"
     api_version = "v202211"

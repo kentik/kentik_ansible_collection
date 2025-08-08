@@ -28,6 +28,7 @@ options:
         choices:
         - US
         - EU
+        - ENV
     state:
         description: Whether to ensure the device should be present or if it should be removed.
         type: str
@@ -87,6 +88,7 @@ except ImportError:
     HAS_ANOTHER_LIBRARY = False
 import json
 import logging
+import os
 
 
 def build_payload(module):
@@ -182,7 +184,7 @@ def main():
         color=dict(type="str", required=True),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", default="US", choices=["US", "EU"]),
+        region=dict(type="str", default="US", choices=["US", "EU", "ENV"]),
         state=dict(default="present", choices=["present", "absent"]),
     )
     module = AnsibleModule(
@@ -199,6 +201,9 @@ def main():
     }
     if module.params["region"] == "EU":
         base_url = "https://grpc.api.kentik.eu"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         base_url = "https://grpc.api.kentik.com"
     api_version = "v202210"

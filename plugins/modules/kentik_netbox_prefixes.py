@@ -75,6 +75,7 @@ options:
         choices:
             - US
             - EU
+            - ENV
     token:
         description: The Kentik API Token used to authenticate.
         type: str
@@ -146,6 +147,7 @@ except ImportError:
     HAS_ANOTHER_LIBRARY = False
 import json
 import logging
+import os
 logging.basicConfig(level=logging.INFO)
 
 
@@ -242,6 +244,9 @@ def add_to_sites(module, kentik_auth, warnings, prefixes):
     # Gather a list of sites
     if module.params["region"] == "EU":
         url = "https://grpc.api.kentik.eu"
+    elif module.params["region"] == "ENV":
+        base_url = os.environ("KENTIK_URL")
+        region = "ENV"
     else:
         url = "https://grpc.api.kentik.com"
     try:
@@ -341,6 +346,8 @@ def create_custom_dimension(module, kentik_auth, name, direction):
     '''Function to create the custom dimension'''
     if module.params["region"] == "EU":
         url = "https://api.kentik.eu/api/v5/customdimension"
+    elif module.params["region"] == "ENV":
+        url = os.environ("KENTIK_URL") + "/api/v5/customdimension"
     else:
         url = "https://api.kentik.com/api/v5/customdimension"
     payload = {"name": f"c_{direction}_{name}",
@@ -395,6 +402,8 @@ def run_batch_url(module, kentik_auth, warnings, json_data_src, json_data_dst, n
     # Start with source dimension.
     if module.params["region"] == "EU":
         url = "https://api.kentik.eu/api/v5/batch"
+    elif module.params["region"] == "ENV":
+        url = os.environ("KENTIK_URL") + "/api/v5/batch"
     else:
         url = "https://api.kentik.com/api/v5/batch"
     if len(json_data_src["upserts"]) == 0:
@@ -633,7 +642,7 @@ def main():
         activeOnly=dict(type="bool", required=False, default=True),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
-        region=dict(type="str", required=False, default="US", choices=["US", "EU"])
+        region=dict(type="str", required=False, default="US", choices=["US", "EU", "ENV"])
     )
     module = AnsibleModule(
         argument_spec=argument_spec,
