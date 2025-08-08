@@ -3,7 +3,6 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
-from os import environ
 
 
 __metaclass__ = type
@@ -134,6 +133,7 @@ except ImportError:
 import json
 import logging
 import time
+from os import environ
 logging.basicConfig(level=logging.INFO)
 
 

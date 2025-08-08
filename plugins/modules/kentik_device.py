@@ -3,7 +3,6 @@
 
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
-from os import environ
 
 __metaclass__ = type
 
@@ -164,6 +163,7 @@ message:
 import json
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_text
+from os import environ
 try:
     import requests
 except ImportError:
