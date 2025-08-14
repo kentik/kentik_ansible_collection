@@ -99,6 +99,9 @@ options:
         - A dictionary for adding NMS SNMP or streaming telemetry to a device.
         - Reference Kentik API Documentation for exact dictionary format.
         type: dict
+    monitoringTemplateId:
+        description: The monitoring template ID to be used.
+        type: int
     state:
         description: Whether to ensure the device should be present or if it should be removed. Run twice on absent to delete.
         type: str
@@ -527,6 +530,7 @@ def main():
         useBgpDeviceId=dict(type="int", required=False),
         deviceBgpFlowspec=dict(type="bool", required=False),
         nms=dict(type="dict", required=False),
+        monitoringTemplateId=dict(type="int", required=False),
         labels=dict(type="list", required=False, elements="str"),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
