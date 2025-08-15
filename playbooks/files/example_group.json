@@ -1,0 +1,7 @@
+{
+    "ANSIBLE_MODULE_ARGS": {
+        "name": "testLabel2",
+        "asn": [65535],
+        "state": "absent"
+    }
+}
