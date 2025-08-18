@@ -2,7 +2,7 @@
 namespace: kentik
 name: kentik_config
 # The version of the collection. Must be compatible with semantic versioning
-version: 1.2.3
+version: 1.2.4
 readme: README.md
 authors:
 - "Ethan Angele (@kentikethan)"
