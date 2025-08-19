@@ -101,7 +101,7 @@ def gather_groups(url, auth, module):
     payload = {}
     headers = auth
     group_data = {}
-    
+
     try:
         response = requests.request(
             "GET", url, headers=headers, data=payload, timeout=30
