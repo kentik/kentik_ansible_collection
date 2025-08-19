@@ -86,6 +86,7 @@ except ImportError:
 import logging
 import time
 
+
 def build_payload(module):
     """Build the request payload"""
     payload = module.params
