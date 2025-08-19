@@ -12,7 +12,7 @@ DOCUMENTATION = r"""
 ---
 module: kentik_as_groups
 short_description: This is a module that will add as groups to kentik.
-version_added: "1.2.3"
+version_added: "1.3.0"
 description: The module will perform standard CRUD operations against the Kentik AS group API.
 options:
     name:
@@ -174,7 +174,7 @@ def main():
     """Main function for the program starts here"""
     argument_spec = dict(
         name=dict(type="str", required=True),
-        asn=dict(type="list", required=True),
+        asn=dict(type="list", required=True, elements="str"),
         email=dict(type="str", required=True),
         token=dict(type="str", no_log=True, required=True),
         region=dict(type="str", default="US", choices=["US", "EU", "ENV"]),
