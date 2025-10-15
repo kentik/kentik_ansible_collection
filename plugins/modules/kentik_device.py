@@ -379,7 +379,7 @@ def delete_device(base_url, api_version, auth, device_id, module):
 def check_device(auth, module, region):
     """Function to check if the device exists in kentik"""
     logging.info("Checking if the device needs updated...")
-    device_name = module.params["deviceName"]
+    device_name = module.params["deviceName"].lower()
     if region == "EU":
         url = f"https://api.kentik.eu/api/v5/device/{device_name}"
     else:
