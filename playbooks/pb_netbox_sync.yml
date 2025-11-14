@@ -118,21 +118,22 @@
         token: "{{ kentik_token }}"
       delegate_to: localhost
 
-    - name: Sync Prefixes
-      kentik.kentik_config.kentik_netbox_prefixes:
-        netboxUrl: "https://{{ netbox_host }}"
-        netboxToken: "{{ netbox_token }}"
-        enableTenant: true
-        tenantName: "tenants"
-        enableSitebyIP: true
-        enableRoles: true
-        enableDescriptions: true
-        enableVlan: true
-        enableCustomFields: true
-        customFieldName: POD
-        activeOnly: true
-        email: "{{ kentik_user }}"
-        token: "{{ kentik_token }}"
-        region: US
-      delegate_to: localhost
-      run_once: true
+    # - name: Sync Prefixes
+    #   kentik.kentik_config.kentik_netbox_prefixes:
+    #     netboxUrl: "https://{{ netbox_host }}"
+    #     netboxToken: "{{ netbox_token }}"
+    #     enableTenant: true
+    #     tenantName: "tenants"
+    #     enableSitebyIP: true
+    #     enableRoles: true
+    #     enableDescriptions: true
+    #     enableVlan: true
+    #     enableCustomFields: true
+    #     customFieldName: POD
+    #     activeOnly: true
+    #     email: "{{ kentik_user }}"
+    #     token: "{{ kentik_token }}"
+    #     region: US
+    #   delegate_to: localhost
+    #   run_once: true
+# 
