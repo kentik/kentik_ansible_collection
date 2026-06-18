@@ -1,6 +1,7 @@
 ---
 - name: "MAIN >> SYNC NETBOX TO KENTIK << MUST USE NETBOX INVENTORY"
   hosts: all
+  serial: 1
   gather_facts: false
   vars_files:
     - ./vars/credentials.yml
