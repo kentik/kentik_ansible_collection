@@ -18,8 +18,8 @@ Configuration (env vars or CLI flags):
   KENTIK_SAMPLE_RATE    Flow sample rate (default:1) --sample-rate
 
 NMS agent detection:
-  If a device carries a NetBox tag named 'kentik_primary_agent' it is flagged
-  for Kentik NMS monitoring.  The tag's NetBox id is used as the NMS agent ID.
+  If a device carries a NetBox tag named 'kentik_primary_agent=<agentId>' it is flagged
+  for Kentik NMS monitoring. The <agentId> portion is used as the NMS agent ID.
 """
 
 import argparse
