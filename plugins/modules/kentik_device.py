@@ -25,7 +25,48 @@ options:
         default: Added by Ansible
     deviceSubtype:
         description: The device subtype.
-        choices: [ a10_cgn, advanced_sflow, cisco_asa, cisco_asa_syslog, cisco_nbar, cisco_nvzflow, cisco_sdwan_xe, cisco_zone_based_firewall, darknet, dns_server, fortinet_fortigate, gcp_cloud_run, gcp_subnet, gigamon, host-nprobe-dns-www, ibm_subnet, ios_xr, istio, juniper_ddos, kappa, kprobe, kprobe_tap, kproxy, ksynth, meraki, mpls, nokialayer2, nprobe, paloalto, paloalto_prismasdwan, pfe_syslog, router, sflow_tunnel, silverpeak, syslog, versa, viptela, vmanage, vmware_velocloud, vmware_vsphere, vxlan ]
+        choices:
+          - a10_cgn
+          - advanced_sflow
+          - cisco_asa
+          - cisco_asa_syslog
+          - cisco_nbar
+          - cisco_nvzflow
+          - cisco_sdwan_xe
+          - cisco_zone_based_firewall
+          - darknet
+          - dns_server
+          - fortinet_fortigate
+          - gcp_cloud_run
+          - gcp_subnet
+          - gigamon
+          - host-nprobe-dns-www
+          - ibm_subnet
+          - ios_xr
+          - istio
+          - juniper_ddos
+          - kappa
+          - kprobe
+          - kprobe_tap
+          - kproxy
+          - ksynth
+          - meraki
+          - mpls
+          - nokialayer2
+          - nprobe
+          - paloalto
+          - paloalto_prismasdwan
+          - pfe_syslog
+          - router
+          - sflow_tunnel
+          - silverpeak
+          - syslog
+          - versa
+          - viptela
+          - vmanage
+          - vmware_velocloud
+          - vmware_vsphere
+          - vxlan
         type: str
         default: "router"
     cdnAttr:
