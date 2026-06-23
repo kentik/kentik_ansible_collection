@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """Sync NetBox devices, sites, and labels to Kentik.
 
 Execution order:
